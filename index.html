@@ -1,0 +1,74 @@
+Apologies for the incomplete response! Here's the continuation of the HTML code for the Flappy Bird game:
+
+```html
+      // Game Variables
+      let score = 0;
+      let game_over = false;
+
+      // Create the game canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = SCREEN_WIDTH;
+      canvas.height = SCREEN_HEIGHT;
+      const ctx = canvas.getContext("2d");
+      document.body.appendChild(canvas);
+
+      // Load game assets
+      const background = new Image();
+      background.src = "background.png";
+      const bird_image = new Image();
+      bird_image.src = "bird.png";
+      const pipe_image = new Image();
+      pipe_image.src = "pipe.png";
+
+      // Bird properties
+      let bird_x = 50;
+      let bird_y = SCREEN_HEIGHT / 2;
+      let bird_y_movement = 0;
+
+      // Pipe properties
+      const pipe_width = pipe_image.width;
+      const pipe_height = pipe_image.height;
+      let pipe_x = SCREEN_WIDTH;
+      let pipe_y = Math.floor(Math.random() * (400 - 100 + 1)) + 100;
+
+      // Event listener for spacebar key press
+      document.addEventListener("keydown", function (event) {
+        if (event.code === "Space") {
+          bird_y_movement = BIRD_UPWARD_FORCE;
+        }
+      });
+
+      // Game loop
+      function update() {
+        if (!game_over) {
+          // Clear the canvas
+          ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+          // Update bird position
+          bird_y_movement += GRAVITY;
+          bird_y += bird_y_movement;
+
+          // Update pipe position
+          pipe_x -= PIPE_SPEED;
+
+          // Check for collision
+          if (
+            bird_x + bird_image.width >= pipe_x &&
+            bird_x <= pipe_x + pipe_width &&
+            (bird_y <= pipe_y || bird_y + bird_image.height >= pipe_y + pipe_height) ||
+            bird_y <= 0 || bird_y + bird_image.height >= SCREEN_HEIGHT
+          ) {
+            game_over = true;
+          }
+
+          // Check if pipe has passed bird
+          if (pipe_x + pipe_width < bird_x) {
+            score++;
+            pipe_x = SCREEN_WIDTH;
+            pipe_y = Math.floor(Math.random() * (400 - 100 + 1)) + 100;
+          }
+
+          // Draw background
+          ctx.drawImage(background, 0, 0);
+
+          // Draw bird
